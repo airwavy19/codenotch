@@ -4,6 +4,8 @@ import SwiftUI
 enum ProviderGlyph: String, Codable, Equatable {
     case claude
     case openai
+    /// Kept as `third` so existing archived DeepSeek readings still decode.
+    /// Its asset is DeepSeek's official whale mark.
     case third
     case cursor
     /// The raw value stays `gemini`: it is the key archived readings were
@@ -38,7 +40,7 @@ enum ProviderGlyph: String, Codable, Equatable {
         case .glm:    return 0.95
         case .grok:   return 1.0
         case .opencode: return 0.95
-        case .third:  return 1.0
+        case .third:  return 1.0 // DeepSeek
         }
     }
 

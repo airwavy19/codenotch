@@ -40,6 +40,10 @@ final class NotchViewModel: ObservableObject {
     /// Which screen edge the notch is welded to. Everything geometric reads
     /// this through `placement` rather than assuming an axis.
     @Published var edge: NotchEdge = .right
+    /// Opacity of the notch surface, controlled from Settings.
+    // A standalone view retains the original opaque rendering. The running
+    // app immediately supplies the user's persisted setting.
+    @Published var notchOpacity: Double = 1
     /// The display's own notch, when this edge has to share the bezel with one.
     ///
     /// Set by the window controller from the screen the panel is on, because

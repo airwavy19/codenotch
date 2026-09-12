@@ -26,6 +26,12 @@ final class Preferences: ObservableObject {
         didSet { defaults.set(notchEdge.rawValue, forKey: Keys.edge) }
     }
 
+    /// Lets the notch sit lightly over whatever is behind it while retaining
+    /// the contrast of the usage rings and labels.
+    @Published var notchOpacity: Double {
+        didSet { defaults.set(notchOpacity, forKey: Keys.opacity) }
+    }
+
     /// Where the app itself shows up: Dock, menu bar, or nowhere.
     @Published var appPresence: AppPresence {
         didSet { defaults.set(appPresence.rawValue, forKey: Keys.presence) }
@@ -59,6 +65,7 @@ final class Preferences: ObservableObject {
         static let visibility = "notchVisibility"
         static let presence = "appPresence"
         static let edge = "notchEdge"
+        static let opacity = "notchOpacity"
         static let lastSeenVersion = "lastSeenVersion"
     }
 
@@ -113,6 +120,9 @@ final class Preferences: ObservableObject {
         // side of a Mac that no system chrome claims by default.
         self.notchEdge = defaults.string(forKey: Keys.edge)
             .flatMap(NotchEdge.init(rawValue:)) ?? .right
+        // Keep an absent value visually close to the original solid-black
+        // treatment, while making the notch a little less imposing by default.
+        self.notchOpacity = min(1, max(0.2, defaults.object(forKey: Keys.opacity) as? Double ?? 0.88))
         // Absent means nothing has been shown yet, which is true of a fresh
         // install — so the current release reads as new to it.
         self.lastSeenVersion = defaults.string(forKey: Keys.lastSeenVersion)

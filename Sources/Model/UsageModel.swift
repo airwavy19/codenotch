@@ -40,21 +40,28 @@ struct LimitWindow: Identifiable, Codable, Equatable {
     /// How many have been spent, when the provider counts up rather than down
     /// and never states the ceiling. Cursor does this.
     let used: Int?
+    /// A provider-supplied headline that is not a count or percentage. DeepSeek
+    /// publishes an API-credit amount, for example, rather than a limit from
+    /// which Codenotch could honestly derive a percentage.
+    let displayText: String?
     /// Nil when the provider does not say when the window rolls over.
     let resetsAt: Date?
 
     init(id: String, label: String, usedFraction: Double? = nil,
-         remaining: Int? = nil, used: Int? = nil, resetsAt: Date? = nil) {
+         remaining: Int? = nil, used: Int? = nil, displayText: String? = nil,
+         resetsAt: Date? = nil) {
         self.id = id
         self.label = label
         self.usedFraction = usedFraction
         self.remaining = remaining
         self.used = used
+        self.displayText = displayText
         self.resetsAt = resetsAt
     }
 
     /// What the tooltip says on the line under the bar.
     var summary: String {
+        if let displayText { return displayText }
         if let usedFraction {
             // Both ends of the same figure. Vendors do not agree on which to
             // show — Codex writes "87% remaining", Claude writes "% used" — so
@@ -137,6 +144,7 @@ struct ProviderSnapshot: Identifiable, Equatable {
     /// What the cell prints under the ring.
     var headlineText: String {
         if let usedFraction { return "\(Int((usedFraction * 100).rounded()))%" }
+        if let displayText = headline?.displayText { return displayText }
         if let remaining = headline?.remaining { return "\(remaining)" }
         if let used = headline?.used { return "\(used)" }
         return "—"

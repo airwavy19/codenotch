@@ -74,6 +74,19 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
+                HStack {
+                    Text("Notch opacity")
+                    Slider(value: $preferences.notchOpacity, in: 0.2...1, step: 0.05)
+                    Text(preferences.notchOpacity, format: .percent.precision(.fractionLength(0)))
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                        .frame(width: 38, alignment: .trailing)
+                }
+
+                Text("Lower values let more of the desktop show through.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
                 // "App icon", not "Icon": the two rows above it are about the
                 // notch, and on its own the word would read as another of them.
                 Picker("App icon", selection: $preferences.appPresence) {
@@ -175,7 +188,7 @@ struct SettingsView: View {
     static let width: CGFloat = 500
     /// Tall enough that Startup and Updates are visible without scrolling —
     /// four account rows push everything below them a long way down.
-    static let height: CGFloat = 560
+    static let height: CGFloat = 600
 
     /// Nothing to read from anywhere. On a first launch that is the normal
     /// state, and it is the only moment the sheet has something to explain.
@@ -191,7 +204,8 @@ struct SettingsView: View {
         "Codenotch reads usage from tools already signed in on this Mac — it "
         + "never asks for your password. Install and sign in to any of Claude "
         + "Code (the terminal tool, not the Claude app), Cursor, Codex, "
-        + "Antigravity, GLM, Grok or OpenCode, and its ring appears in the notch."
+        + "Antigravity, GLM, Grok or OpenCode — or set a DeepSeek API key — "
+        + "and its ring appears in the notch."
 
     /// Said before it happens rather than after. A system dialogue asking to
     /// read a *credential*, from an app installed a minute ago, looks alarming

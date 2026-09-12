@@ -70,7 +70,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let store = UsageStore(
                 providers: claudeProfiles.map { ClaudeOAuthProvider(profile: $0) }
                     + [CursorLocalProvider(), CodexLocalProvider(), AntigravityProvider(),
-                       GLMProvider(), GrokLocalProvider(), OpenCodeProvider()]
+                       GLMProvider(), GrokLocalProvider(), OpenCodeProvider(), DeepSeekProvider()]
                     + webProviders,
                 disconnected: preferences.disconnectedProviders
             )
@@ -81,6 +81,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             // this, every launch on any other edge opens with a flash of the
             // right-hand one and then crossfades away from it.
             controller.model.edge = preferences.notchEdge
+            controller.model.notchOpacity = preferences.notchOpacity
 
             let updater = Updater()
             self.updater = updater
@@ -144,6 +145,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             preferences.$notchEdge
                 .receive(on: RunLoop.main)
                 .sink { [weak controller] in controller?.apply(edge: $0) }
+                .store(in: &cancellables)
+
+            preferences.$notchOpacity
+                .receive(on: RunLoop.main)
+                .sink { [weak controller] in controller?.model.notchOpacity = $0 }
                 .store(in: &cancellables)
 
             preferences.$disconnectedProviders

@@ -76,7 +76,7 @@ struct NotchRootView: View {
 
     private func notch(_ place: NotchPlacement) -> some View {
         SideNotchShape(edge: model.edge, joining: model.joinedNotch)
-            .fill(Palette.notch)
+            .fill(Palette.notch.opacity(model.notchOpacity))
             .frame(width: model.notchSize.width, height: model.notchSize.height)
             // Aligned to the corner where the stack starts *and* the bezel is,
             // then pushed clear of any hardware notch. Centring the contents in
